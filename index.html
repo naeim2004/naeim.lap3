@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ควบคุมหลอดไฟด้วยนิ้ว</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 50px;
+            background-color: #f0f0f0;
+        }
+        .light-bulb-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        .light-bulb {
+            width: 80px;
+            height: 150px;
+            background-color: #f1c40f;
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s;
+        }
+        .light-bulb.off {
+            background-color: #7f8c8d;
+        }
+        .fps-display {
+            margin-top: 20px;
+            font-size: 24px;
+            color: #2c3e50;
+        }
+    </style>
+</head>
+<body>
+    <h1>ควบคุมหลอดไฟด้วยนิ้ว</h1>
+    <p>ยกนิ้วขึ้นเพื่อเปิดหลอดไฟ</p>
+    <div class="light-bulb-container">
+        <div class="light-bulb off" id="light1"></div>
+        <div class="light-bulb off" id="light2"></div>
+        <div class="light-bulb off" id="light3"></div>
+        <div class="light-bulb off" id="light4"></div>
+        <div class="light-bulb off" id="light5"></div>
+    </div>
+    <div class="fps-display" id="fps-display">FPS: 0</div>
+
+    <script>
+        // ตัวแปรจำลองจำนวนที่ยกนิ้ว
+        let numFingers = 0;  // ค่าจำนวนที่ยกนิ้ว (จำลองจาก Python)
+        let fps = 0;         // ตัวแปร FPS สำหรับการแสดงผล
+
+        // ฟังก์ชั่นสำหรับการอัพเดทสถานะของหลอดไฟ
+        function updateLights(numFingers) {
+            for (let i = 1; i <= 5; i++) {
+                let light = document.getElementById('light' + i);
+                if (i <= numFingers) {
+                    light.classList.remove('off');
+                } else {
+                    light.classList.add('off');
+                }
+            }
+        }
+
+        // ฟังก์ชั่นสำหรับการจำลองการนับนิ้ว (ใช้ตัวแปร numFingers)
+        function simulateFingerCount() {
+            numFingers = Math.floor(Math.random() * 6); // สุ่มจำนวนจาก 0 ถึง 5 (เหมือนกับการนับนิ้วจริงๆ)
+            updateLights(numFingers);
+        }
+
+        // ฟังก์ชั่นสำหรับการคำนวณ FPS
+        let lastTime = Date.now();
+        function updateFPS() {
+            let currentTime = Date.now();
+            fps = 1000 / (currentTime - lastTime);
+            lastTime = currentTime;
+            document.getElementById('fps-display').innerText = `FPS: ${Math.round(fps)}`;
+        }
+
+        // เริ่มการจำลองทุกๆ 500ms
+        setInterval(() => {
+            simulateFingerCount();
+            updateFPS();
+        }, 500);
+    </script>
+</body>
+</html>
